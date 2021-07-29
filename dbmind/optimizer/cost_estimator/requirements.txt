@@ -1,0 +1,5 @@
+torch==1.8.1
+numpy==1.9.5
+pandas==1.2.4
+pypred==0.4.0
+gensim==4.0.1

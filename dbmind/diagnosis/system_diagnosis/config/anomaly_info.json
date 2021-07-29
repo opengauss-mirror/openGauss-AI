@@ -1,0 +1,54 @@
+{
+    "cpu_saturation":
+    {
+        "desc": "数据库外部的进程占据了较多的 CPU 计算资源",
+        "risk_level": "中级",
+        "advice": "检查主机并且退出CPU占用较大的进程"
+    },
+    "io_saturation":{
+        "desc": "数据库外部的进程占据了较多的 I/O 资源",
+        "risk_level": "中级",
+        "advice": "检查主机并且退出IO占用较大的进程"
+    },
+    "database_backup":{
+        "desc": "启动MYSQLDUMP备份数据库的部分表",
+        "risk_level": "低级",
+        "advice": "等待数据库备份，若时间太长则取消"
+    },
+    "table_restore":{
+        "desc": "启动MYSQL将外部的数据表导入到数据库",
+        "risk_level": "低级",
+        "advice": "等待数据库还原，若时间太长则取消"
+    },
+    "poorly_physical_design":{
+        "desc": "在一些数据列上构造不必要的索引,当 INSERT 操作过多 的时候会造成不必要的开销",
+        "risk_level": "高级",
+        "advice": "检查并删除无用的索引"
+    },
+    "poorly_written_query":{
+        "desc": "在多张数据表之间 JOIN 的查询,一般这种查询会被 OLTP DBA 所禁止",
+        "risk_level": "高级",
+        "advice": "结束开销较大的查询"
+    },
+    "workload_spike":{
+        "desc": "用户和事务请求突然变大,这会造成数据库的阻塞效应",
+        "risk_level": "中级",
+        "advice": "对workload进行限流"
+    },
+    "vacuum_analyze":{
+        "desc": "使用 VACUUMANALYZE 更新 openGauss 数据库中的统计信息",
+        "risk_level": "低级",
+        "advice": "减小ANALYZE刷新的频率"
+    },
+    "lock_contention":{
+        "desc": "由于各个用户频繁的访问相同的数据库区域导致锁的竞争",
+        "risk_level": "中级",
+        "advice": "减小Lock冲突查询的并发度"
+    },
+    "network_congestion":{
+        "desc": "数据库所在服务器的网络出现了故障",
+        "risk_level": "高级",
+        "advice": "检查网络拥塞问题"
+    }
+}
+

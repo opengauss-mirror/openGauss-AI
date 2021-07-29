@@ -1,0 +1,4 @@
+torch
+psycopg2
+numpy
+sql_metadata
