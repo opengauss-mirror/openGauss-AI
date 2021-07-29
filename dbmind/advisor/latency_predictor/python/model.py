@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2020 Huawei Technologies Co.,Ltd.
+ *
+ * openGauss is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *
+ *          http://license.coscl.org.cn/MulanPSL2
+ *
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
+ 
+ 
+
 """
  openGauss is licensed under Mulan PSL v2.
  You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -685,6 +702,12 @@ def ratio_error_acc_wrapper(epsilon, threshold):
     """
     epsilon = K.constant(epsilon)
     threshold = K.constant(threshold)
+
+    def ratio_acc(y_true, y_pred):
+        return ratio_error_acc(y_true, y_pred, epsilon, threshold)
+
+    return ratio_acc
+eshold)
 
     def ratio_acc(y_true, y_pred):
         return ratio_error_acc(y_true, y_pred, epsilon, threshold)

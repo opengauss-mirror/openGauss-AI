@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2020 Huawei Technologies Co.,Ltd.
+ *
+ * openGauss is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *
+ *          http://license.coscl.org.cn/MulanPSL2
+ *
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
+ 
+ 
+
 #!/usr/bin/python
 from __future__ import division, print_function, unicode_literals
 
@@ -812,6 +829,12 @@ if __name__=="__main__":
     enc_red2.prepare_data()
     enc_red2.load_model(o_path+"result/job/encoder_reducer/8.6-1/")
     # # enc_red2.evaluateAll(triples=[['22b','mv8','22b-8'],['16a','mv28','16a-28']])
+    # enc_red2.evaluateAll()
+    
+    evl_q_time, evl_q_mv_time, attn, hidd=enc_red2.evaluate(enc_red2.q_data["3a"][0], enc_red2.mv_data["mv8"][0])
+    print("q_tim", evl_q_time)
+    print("q_mv_tim", evl_q_mv_time)
+b','mv8','22b-8'],['16a','mv28','16a-28']])
     # enc_red2.evaluateAll()
     
     evl_q_time, evl_q_mv_time, attn, hidd=enc_red2.evaluate(enc_red2.q_data["3a"][0], enc_red2.mv_data["mv8"][0])
