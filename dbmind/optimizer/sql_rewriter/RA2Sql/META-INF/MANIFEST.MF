@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Rsrc-Class-Path: ./ postgresql-9.4-1200-jdbc41.jar antlr-4.5-complete.
+ jar
+Class-Path: .
+Rsrc-Main-Class: dbConnect.Main
+Main-Class: org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader
+

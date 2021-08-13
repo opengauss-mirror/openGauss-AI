@@ -1,0 +1,12 @@
+{
+    "0":"cpu_saturation",
+    "1":"io_saturation",
+    "2":"database_backup",
+    "3":"table_restore",
+    "4":"poorly_physical_design",
+    "5":"poorly_written_query",
+    "6":"workload_spike",
+    "7":"vacuum_analyze",
+    "8":"lock_contention",
+    "9":"network_congestion"
+}

@@ -1,0 +1,8 @@
+torchvision
+numpy
+sqlparse
+matplotlib
+networkx
+torch
+psycopg2
+tensorboardX

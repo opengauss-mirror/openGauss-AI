@@ -1,0 +1,5 @@
+tensorflow>=2.2.0
+keras-rl2
+paramiko
+bayesian-optimization
+ptable
