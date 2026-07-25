@@ -1,21 +1,20 @@
-/*
- * Copyright (c) 2020 Huawei Technologies Co.,Ltd.
- *
- * openGauss is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
- * You may obtain a copy of Mulan PSL v2 at:
- *
- *          http://license.coscl.org.cn/MulanPSL2
- *
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
- * See the Mulan PSL v2 for more details.
- */
+# Copyright (c) 2020 Huawei Technologies Co.,Ltd.
+#
+# openGauss is licensed under Mulan PSL v2.
+# You can use this software according to the terms and conditions of the Mulan PSL v2.
+# You may obtain a copy of Mulan PSL v2 at:
+#
+#          http://license.coscl.org.cn/MulanPSL2
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
  
  
 
 import psycopg2
+from psycopg2 import sql
 import sql_metadata
 import configparser
 import copy
@@ -45,13 +44,17 @@ class postgresql_env(object):
                                 port=config_raw.get('server', 'port'))
         cur = conn.cursor()
 
-        cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' and table_type = 'BASE TABLE';")
+        cur.execute("SELECT table_name FROM information_schema.tables "
+                    "WHERE table_schema = %s and table_type = 'BASE TABLE';",
+                    (self.schema_name,))
         res = cur.fetchall()
 
         for table in res:
             self.db_table_list.append(table[0])
 
-            cur.execute("SELECT column_name FROM information_schema.columns WHERE table_name='%s';" % table)
+            cur.execute("SELECT column_name FROM information_schema.columns "
+                        "WHERE table_schema = %s AND table_name = %s;",
+                        (self.schema_name, table[0]))
             col_res = cur.fetchall()
             col_tmp = []
             for col in col_res:
@@ -130,6 +133,16 @@ class postgresql_env(object):
         self.cur_size_use = 0
         self.termial_wait_num = 0
 
+    def _create_hypothetical_index(self, conn, cur, table_name, column_name):
+        index_definition = sql.SQL("CREATE INDEX ON {}.{} ({})").format(
+            sql.Identifier(self.schema_name),
+            sql.Identifier(table_name),
+            sql.Identifier(column_name)
+        ).as_string(conn)
+        cur.execute("SELECT * FROM hypopg_create_index(%s);",
+                    (index_definition,))
+        return cur.fetchall()[0][0]
+
     def step(self, action):
         s = self.cur_state
         scost = self.cur_cost
@@ -141,11 +154,14 @@ class postgresql_env(object):
                                 port=config_raw.get('server', 'port'))
         cur = conn.cursor()
 
-        cur.execute("SELECT * FROM hypopg_create_index('CREATE INDEX ON %s (%s)');"
-                    % (self.db_table_list[action[0]], self.db_column_list[action[0]][action[1]]))
-        index_id = cur.fetchall()[0][0]
+        index_id = self._create_hypothetical_index(
+            conn,
+            cur,
+            self.db_table_list[action[0]],
+            self.db_column_list[action[0]][action[1]]
+        )
 
-        cur.execute("SELECT * FROM hypopg_relation_size(%s);" % str(index_id))
+        cur.execute("SELECT * FROM hypopg_relation_size(%s);", (index_id,))
         cur_action_size = cur.fetchall()[0][0]
 
         cur.close()
@@ -192,8 +208,12 @@ class postgresql_env(object):
         cur = conn.cursor()
 
         for table_pos, col_pos in self.cur_virtual_index:
-            cur.execute("SELECT * FROM hypopg_create_index('CREATE INDEX ON %s (%s)');" %
-                        (self.db_table_list[table_pos], self.db_column_list[table_pos][col_pos]))
+            self._create_hypothetical_index(
+                conn,
+                cur,
+                self.db_table_list[table_pos],
+                self.db_column_list[table_pos][col_pos]
+            )
 
         workload_cost = 0
         for sql in self.workload:
