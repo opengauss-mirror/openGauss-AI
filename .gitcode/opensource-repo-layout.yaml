@@ -1,0 +1,22 @@
+project: opengauss/openGauss-AI
+version: "1.0"
+
+directories:
+  - path: "./optimizer/sql_rewriter/RA2Sql/"
+    type: upstream
+  - path: "./advisor/index_advisor/test/"
+    type: test
+  - path: "./advisor/knob_tuner/test/"
+    type: test
+  - path: "./monitor/anomaly_detection/test/"
+    type: test
+  - path: "./optimizer/cost_estimator/test/"
+    type: test
+  - path: "./optimizer/sql_rewriter/RA2Sql/Rel_Al_Intrepreter/src/test/"
+    type: test
+  - path: "./optimizer/sql_rewriter/src/test/"
+    type: test
+
+files:
+  - path: "./LICENSE"
+    type: license
